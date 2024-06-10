@@ -1,13 +1,10 @@
-// COUNTER not COIN ... -.-
-
 int impulsCount=0;
 int coinHIGH = 0;
-
 void incomingImpuls()
 {
-  Serial.println("Calling: ");
   impulsCount=impulsCount+1;
   coinHIGH = 1;
+  Serial.println("Impulse detected: " + String(impulsCount));  // Send message to Raspberry Pi
 }
 
 void setup() {
@@ -20,7 +17,6 @@ void setup() {
 void loop() {
 
   if(coinHIGH == 1){
-    Serial.println("SLEEPING 45s on HIGH");
     digitalWrite(8, LOW);
     delay(1000*30);
     delay(1000*30);
@@ -28,6 +24,5 @@ void loop() {
     digitalWrite(8, HIGH);
     coinHIGH=0;
   }
-  Serial.println(impulsCount);
   digitalWrite(8, HIGH);
 }
