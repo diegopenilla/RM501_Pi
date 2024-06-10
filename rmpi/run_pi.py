@@ -17,4 +17,4 @@ with open(filename, 'w') as file:
 
 print(f"File {filename} has been created.")
 
-time.sleep(60)
+time.sleep(600)
