@@ -38,11 +38,9 @@ if 'rc' not in st.session_state:
     rc.SpeedAccelDeccelPositionM2(address2, 2000, 10000, 10000, 14500, 100)
     time.sleep(0.05)
 
-if 'q4_angle' not in st.session_state:
-    st.session_state['q4_angle'] = 90
-
-if 'q5_angle' not in st.session_state:
-    st.session_state['q5_angle'] = 0
+    # set encoders 3 to 0
+    rc.SetEncM1(address3, 0)
+    rc.SetEncM2(address3, 0)
 
 if 'saved_positions' not in st.session_state:
     try:
@@ -50,7 +48,6 @@ if 'saved_positions' not in st.session_state:
     except Exception as e:
         st.error(f"Error loading positions: {e}, initialized as empty list")
         st.session_state['saved_positions'] = []
-
 
 input_file_name = st.text_input("Input file name .csv", "positions_kpr")
 if st.button("Load Positions"):
@@ -64,6 +61,10 @@ if 'motor1_pos_current' not in st.session_state:
     st.session_state['motor2_pos_current'] = 0
     st.session_state['motor3_pos_current'] = 0
 
+if 'motor4_pos_current' not in st.session_state:
+    st.session_state['motor4_pos_current'] = 0
+    st.session_state['motor5_pos_current'] = 0
+
 rc = st.session_state['rc']
 
 if 'current_pos' not in st.session_state:
@@ -74,7 +75,7 @@ if 'current_pos' not in st.session_state:
     enc4 = rc.ReadEncM1(address3)[1]  # wrist pitch
     enc5 = rc.ReadEncM2(address3)[1]  # wrist roll
 
-    st.session_state['current_pos'] = [enc1, enc2, enc3]
+    st.session_state['current_pos'] = True
 
     if 'motor1_slider_key' not in st.session_state:
         st.session_state['motor1_slider_key'] = enc1
@@ -99,58 +100,64 @@ def gripper_open(step=0.5):
 
 
 # UTILS
-def move_up_q4(continuous=True):
-    rc.SpeedM1(address3, 2000)
+def move_up_q4():
+    current_4 = rc.ReadEncM1(address3)[1]
+    current_5 = rc.ReadEncM2(address3)[1]
+
+    rc.SpeedAccelDeccelPositionM1(address3, 2000, 10000, 10000, current_4 + 2000, 100)
     time.sleep(0.01)
-    rc.SpeedM2(address3, 2000)
-    time.sleep(0.5)
+    rc.SpeedAccelDeccelPositionM2(address3, 2000, 10000, 10000, current_5 + 2000, 100)
 
-    if continuous:
-        rc.SpeedM1(address3, 0)
-        time.sleep(0.01)
-        rc.SpeedM2(address3, 0)
+    time.sleep(2)
 
-    st.session_state['q4_angle'] += 90 / 8
+    # read encoder
+    st.session_state['motor4_pos_current'] = rc.ReadEncM1(address3)[1]
+    st.session_state['motor5_pos_current'] = rc.ReadEncM2(address3)[1]
 
 
-def move_down_q4(continuous=True):
-    rc.SpeedM1(address3, -2000)
+def move_down_q4():
+    current_4 = rc.ReadEncM1(address3)[1]
+    current_5 = rc.ReadEncM2(address3)[1]
+
+    rc.SpeedAccelDeccelPositionM1(address3, 2000, 10000, 10000, current_4 - 2000, 100)
     time.sleep(0.01)
-    rc.SpeedM2(address3, -2000)
-    time.sleep(0.5)
+    rc.SpeedAccelDeccelPositionM2(address3, 2000, 10000, 10000, current_5 - 2000, 100)
 
-    if continuous:
-        rc.SpeedM1(address3, 0)
-        time.sleep(0.01)
-        rc.SpeedM2(address3, 0)
+    time.sleep(2)
 
-    st.session_state['q4_angle'] -= 90/8
+    # read encoder
+    st.session_state['motor4_pos_current'] = rc.ReadEncM1(address3)[1]
+    st.session_state['motor5_pos_current'] = rc.ReadEncM2(address3)[1]
 
 
-def turn_left_q5(continuous=True):
-    rc.SpeedM1(address3, 2000)  # Motor 1 spins forward
-    rc.SpeedM2(address3, -2000)  # Motor 2 spins backward
-    time.sleep(0.5)  # Allow motors to spin long enough to achieve rotation
+def turn_left_q5():
+    current4 = rc.ReadEncM1(address3)[1]
+    current5 = rc.ReadEncM2(address3)[1]
 
-    if continuous:
-        rc.SpeedM1(address3, 0)  # Stop Motor 1
-        rc.SpeedM2(address3, 0)  # Stop Motor 2
-        time.sleep(0.01)
+    rc.SpeedAccelDeccelPositionM1(address3, 2000, 10000, 10000, current4 + 2000, 100)
+    time.sleep(0.01)
+    rc.SpeedAccelDeccelPositionM2(address3, 2000, 10000, 10000, current5 - 2000, 100)
 
-    st.session_state['q5_angle'] += 90 / 8
+    time.sleep(2)
+
+    # read encoder
+    st.session_state['motor4_pos_current'] = rc.ReadEncM1(address3)[1]
+    st.session_state['motor5_pos_current'] = rc.ReadEncM2(address3)[1]
 
 
-def turn_right_q5(continuous=True):
-    rc.SpeedM1(address3, -2000)  # Motor 1 spins backward
-    rc.SpeedM2(address3, 2000)  # Motor 2 spins forward
-    time.sleep(0.5)  # Allow motors to spin long enough to achieve rotation
+def turn_right_q5():
+    current4 = rc.ReadEncM1(address3)[1]
+    current5 = rc.ReadEncM2(address3)[1]
 
-    if continuous:
-        rc.SpeedM1(address3, 0)  # Stop Motor 1
-        rc.SpeedM2(address3, 0)  # Stop Motor 2
-        time.sleep(0.01)
+    rc.SpeedAccelDeccelPositionM1(address3, 2000, 10000, 10000, current4 - 2000, 100)
+    time.sleep(0.01)
+    rc.SpeedAccelDeccelPositionM2(address3, 2000, 10000, 10000, current5 + 2000, 100)
 
-    st.session_state['q5_angle'] -= 90 / 8
+    time.sleep(2)
+
+    # read encoder
+    st.session_state['motor4_pos_current'] = rc.ReadEncM1(address3)[1]
+    st.session_state['motor5_pos_current'] = rc.ReadEncM2(address3)[1]
 
 
 def safe_update_motor_position(motor_id, position):
@@ -161,7 +168,6 @@ def safe_update_motor_position(motor_id, position):
             rc.SpeedAccelDeccelPositionM1(address2, 10000, 10000, 10000, position, 100)
         elif motor_id == 3:
             rc.SpeedAccelDeccelPositionM2(address2, 10000, 10000, 10000, position, 100)
-        time.sleep(1)
         return position
     except Exception as e:
         st.error(f"Error updating motor {motor_id} position: {e}")
@@ -187,6 +193,12 @@ def update_motor_position3():
                                                                             )
 
 
+def update_wrist_positions(pos4, pos5):
+    rc.SpeedAccelDeccelPositionM1(address3, 2000, 10000, 10000, pos4, 100)
+    time.sleep(0.05)
+    rc.SpeedAccelDeccelPositionM2(address3, 2000, 10000, 10000, pos5, 100)
+
+
 def axis2_position_to_angle(position):
     return -(position - 16375) / 154.17
 
@@ -200,54 +212,14 @@ def update_motor_positions(positions):
     safe_update_motor_position(1, positions[0])
     safe_update_motor_position(2, positions[1])
     safe_update_motor_position(3, positions[2])
-
-    # q4 is handled by speed, each call by 10 degrees
-    target_angle4 = positions[3]
-    current_angle4 = st.session_state['q4_angle']
-    print(f"Current angle {current_angle4} target {target_angle4}")
-
-    if current_angle4 > target_angle4:
-        diff_steps = (current_angle4 - target_angle4) / 10
-        print(f"Diff steps {diff_steps}")
-        for i in range(int(diff_steps)):
-            if i == diff_steps - 1:
-                move_down_q4(continuous=True)
-            else:
-                move_down_q4()
-
-    else:
-        diff_steps = (target_angle4 - current_angle4) / 10
-        for i in range(int(diff_steps)):
-            if i == int(diff_steps) - 1:
-                move_up_q4(continuous=True)
-            else:
-                move_up_q4()
-
-    # q5
-    target_angle5 = positions[4]
-    current_angle5 = st.session_state['q5_angle']
-    print(f"Current angle {current_angle5} target {target_angle5}")
-
-    if current_angle5 > target_angle5:
-        diff_steps = (current_angle5 - target_angle5) / (90 / 8)
-        print(f"Diff steps {diff_steps}")
-        for i in range(int(diff_steps)):
-            if i == diff_steps - 1:
-                turn_right_q5(continuous=True)
-            turn_right_q5()
-
-    else:
-        diff_steps = (target_angle5 - current_angle5) / (90 / 8)
-        for i in range(int(diff_steps)):
-            if i == int(diff_steps) - 1:
-                turn_left_q5(continuous=True)
-            turn_left_q5()
+    update_wrist_positions(positions[3], positions[4])
+    time.sleep(5)
 
     st.session_state['motor1_pos_current'] = positions[0]
     st.session_state['motor2_pos_current'] = positions[1]
     st.session_state['motor3_pos_current'] = positions[2]
-    st.session_state['q4_angle'] = positions[3]
-    st.session_state['q5_angle'] = positions[4]
+    st.session_state['motor4_pos_current'] = positions[3]
+    st.session_state['motor5_pos_current'] = positions[4]
 
 
 # __________Streamlit app__________
@@ -256,7 +228,6 @@ if 'saved_positions' not in st.session_state:
     st.session_state['saved_positions'] = []
 
 st.sidebar.title('RM501 Move Master II')
-
 
 save_position_name = st.sidebar.text_input("Position Name", "")
 col1, col2 = st.sidebar.columns(2)
@@ -270,7 +241,9 @@ with col1:
 with col2:
     if st.button("Save Position"):
         pos = [st.session_state['motor1_slider_key'], st.session_state['motor2_slider_key'],
-               st.session_state['motor3_slider_key'], st.session_state['q4_angle'], st.session_state['q5_angle'], save_position_name]
+               st.session_state['motor3_slider_key'], st.session_state['motor4_pos_current'],
+               st.session_state['motor5_pos_current'],
+               save_position_name]
 
         st.session_state['motor1_pos_current'] = st.session_state['motor1_slider_key']
         st.session_state['motor2_pos_current'] = st.session_state['motor2_slider_key']
@@ -299,12 +272,12 @@ with st.sidebar.container():
             turn_left_q5()
 
 st.markdown("### `Current Joint Angles`")
-angle1 = position_to_angle(st.session_state['motor1_slider_key'], 300, 48000)
-angle2 = axis2_position_to_angle(st.session_state['motor2_slider_key'])
-angle3 = position_to_angle(st.session_state['motor3_slider_key'], 90, 14500)
-angle4 = st.session_state['q4_angle']  # Assuming 'q4_angle' exists in session_state and initialized properly
-angle5 = st.session_state['q5_angle']  # Assuming 'q5_angle' exists and is initialized
-
+angle1 = st.session_state['motor1_pos_current']
+angle2 = st.session_state['motor2_pos_current']
+angle3 = st.session_state['motor3_pos_current']
+angle4 = st.session_state[
+    'motor4_pos_current']  # Assuming 'motor_4_pos_current' exists in session_state and initialized properly
+angle5 = st.session_state['motor5_pos_current']  # Assuming 'motor_5_pos_current' exists and is initialized
 
 # Display the saved positions with a corresponding button
 for idx, positions in enumerate(st.session_state['saved_positions']):
@@ -318,6 +291,8 @@ for idx, positions in enumerate(st.session_state['saved_positions']):
 m1 = st.session_state['motor1_pos_current']
 m2 = st.session_state['motor2_pos_current']
 m3 = st.session_state['motor3_pos_current']
+m4 = st.session_state['motor4_pos_current']
+m5 = st.session_state['motor5_pos_current']
 
 st.sidebar.subheader("Motor Positions")
 # Set up number inputs
@@ -342,9 +317,6 @@ with c3:
     if st.button("Close"):
         gripper_close(sleep)
 
-
-
-
 # col1, col2, col3, col4, col5 = st.columns(5)
 # with col1:
 #     st.metric(label='Axis1', value=angle1)
@@ -356,7 +328,7 @@ with c3:
 #     st.metric(label='Axis4', value=angle4)
 # with col5:
 #     st.metric(label='Axis5', value=angle5)
-#
+
 output_file_name = st.text_input("Output file name .csv", "positions_kpr")
 if st.button("Save Positions"):
     save_positions_to_csv(st.session_state['saved_positions'], f"{output_file_name}.csv")
