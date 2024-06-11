@@ -25,6 +25,24 @@ address1 = 0x80
 address2 = 0x81
 address3 = 0x82
 
+if "gripper_closed" not in st.session_state:
+    st.session_state["gripper_closed"] = True
+
+def gripper_close(step=0.2):
+    rc.SpeedAccelM1(address1, 3000, 3000)
+    time.sleep(step)
+    rc.SpeedAccelM1(address1, 3000, 0)
+    st.session_state["gripper_closed"] = 1
+
+
+def gripper_open(step=0.2):
+    rc.SpeedAccelM1(address1, 3000, -3000)
+    time.sleep(step)
+    rc.SpeedAccelM1(address1, 3000, 0)
+    st.session_state["gripper_closed"] = 0
+
+
+
 if 'rc' not in st.session_state:
     rc = Roboclaw("/dev/tty.usbserial-DN41WBZS", 115200)
     st.session_state['rc'] = rc
@@ -42,14 +60,17 @@ if 'rc' not in st.session_state:
     rc.SetEncM1(address3, 0)
     rc.SetEncM2(address3, 0)
 
+    # close gripper
+    gripper_close(0.5)
+
 if 'saved_positions' not in st.session_state:
     try:
-        st.session_state['saved_positions'] = load_positions_from_csv("positions_kpr.csv")
+        st.session_state['saved_positions'] = load_positions_from_csv("kpr_positions.csv")
     except Exception as e:
         st.error(f"Error loading positions: {e}, initialized as empty list")
         st.session_state['saved_positions'] = []
 
-input_file_name = st.text_input("Input file name .csv", "positions_kpr")
+input_file_name = st.text_input("Input file name .csv", "kpr_positions")
 if st.button("Load Positions"):
     try:
         st.session_state['saved_positions'] = load_positions_from_csv(f"{input_file_name}.csv")
@@ -64,6 +85,8 @@ if 'motor1_pos_current' not in st.session_state:
 if 'motor4_pos_current' not in st.session_state:
     st.session_state['motor4_pos_current'] = 0
     st.session_state['motor5_pos_current'] = 0
+
+
 
 rc = st.session_state['rc']
 
@@ -87,28 +110,17 @@ if 'current_pos' not in st.session_state:
         st.session_state['motor3_slider_key'] = enc3
 
 
-def gripper_close(step=0.5):
-    rc.SpeedAccelM1(address1, 3000, 3000)
-    time.sleep(step)
-    rc.SpeedAccelM1(address1, 3000, 0)
-
-
-def gripper_open(step=0.5):
-    rc.SpeedAccelM1(address1, 3000, -3000)
-    time.sleep(step)
-    rc.SpeedAccelM1(address1, 3000, 0)
-
 
 # UTILS
 def move_up_q4():
     current_4 = rc.ReadEncM1(address3)[1]
     current_5 = rc.ReadEncM2(address3)[1]
 
-    rc.SpeedAccelDeccelPositionM1(address3, 2000, 10000, 10000, current_4 + 2000, 100)
+    rc.SpeedAccelDeccelPositionM1(address3, 2000, 10000, 10000, current_4 + 500, 100)
     time.sleep(0.01)
-    rc.SpeedAccelDeccelPositionM2(address3, 2000, 10000, 10000, current_5 + 2000, 100)
+    rc.SpeedAccelDeccelPositionM2(address3, 2000, 10000, 10000, current_5 + 500, 100)
 
-    time.sleep(2)
+    time.sleep(1)
 
     # read encoder
     st.session_state['motor4_pos_current'] = rc.ReadEncM1(address3)[1]
@@ -119,11 +131,11 @@ def move_down_q4():
     current_4 = rc.ReadEncM1(address3)[1]
     current_5 = rc.ReadEncM2(address3)[1]
 
-    rc.SpeedAccelDeccelPositionM1(address3, 2000, 10000, 10000, current_4 - 2000, 100)
+    rc.SpeedAccelDeccelPositionM1(address3, 2000, 10000, 10000, current_4 - 500, 100)
     time.sleep(0.01)
-    rc.SpeedAccelDeccelPositionM2(address3, 2000, 10000, 10000, current_5 - 2000, 100)
+    rc.SpeedAccelDeccelPositionM2(address3, 2000, 10000, 10000, current_5 - 500, 100)
 
-    time.sleep(2)
+    time.sleep(1)
 
     # read encoder
     st.session_state['motor4_pos_current'] = rc.ReadEncM1(address3)[1]
@@ -134,11 +146,11 @@ def turn_left_q5():
     current4 = rc.ReadEncM1(address3)[1]
     current5 = rc.ReadEncM2(address3)[1]
 
-    rc.SpeedAccelDeccelPositionM1(address3, 2000, 10000, 10000, current4 + 2000, 100)
+    rc.SpeedAccelDeccelPositionM1(address3, 2000, 10000, 10000, current4 + 1000, 100)
     time.sleep(0.01)
-    rc.SpeedAccelDeccelPositionM2(address3, 2000, 10000, 10000, current5 - 2000, 100)
+    rc.SpeedAccelDeccelPositionM2(address3, 2000, 10000, 10000, current5 - 1000, 100)
 
-    time.sleep(2)
+    time.sleep(1)
 
     # read encoder
     st.session_state['motor4_pos_current'] = rc.ReadEncM1(address3)[1]
@@ -149,9 +161,9 @@ def turn_right_q5():
     current4 = rc.ReadEncM1(address3)[1]
     current5 = rc.ReadEncM2(address3)[1]
 
-    rc.SpeedAccelDeccelPositionM1(address3, 2000, 10000, 10000, current4 - 2000, 100)
+    rc.SpeedAccelDeccelPositionM1(address3, 2000, 10000, 10000, current4 - 1000, 100)
     time.sleep(0.01)
-    rc.SpeedAccelDeccelPositionM2(address3, 2000, 10000, 10000, current5 + 2000, 100)
+    rc.SpeedAccelDeccelPositionM2(address3, 2000, 10000, 10000, current5 + 1000, 100)
 
     time.sleep(2)
 
@@ -213,13 +225,23 @@ def update_motor_positions(positions):
     safe_update_motor_position(2, positions[1])
     safe_update_motor_position(3, positions[2])
     update_wrist_positions(positions[3], positions[4])
-    time.sleep(5)
+
+    if positions[5] and not st.session_state['gripper_closed']:
+        gripper_close(0.05)
+
+    elif not positions[5] and st.session_state['gripper_closed']:
+        gripper_open(0.05)
+
+    # sleep while encoders are changing, all addresses
+    time.sleep(2)
 
     st.session_state['motor1_pos_current'] = positions[0]
     st.session_state['motor2_pos_current'] = positions[1]
     st.session_state['motor3_pos_current'] = positions[2]
     st.session_state['motor4_pos_current'] = positions[3]
     st.session_state['motor5_pos_current'] = positions[4]
+
+    st.session_state['gripper_closed'] = positions[5]
 
 
 # __________Streamlit app__________
@@ -242,7 +264,7 @@ with col2:
     if st.button("Save Position"):
         pos = [st.session_state['motor1_slider_key'], st.session_state['motor2_slider_key'],
                st.session_state['motor3_slider_key'], st.session_state['motor4_pos_current'],
-               st.session_state['motor5_pos_current'],
+               st.session_state['motor5_pos_current'], st.session_state['gripper_closed'],
                save_position_name]
 
         st.session_state['motor1_pos_current'] = st.session_state['motor1_slider_key']
@@ -329,6 +351,12 @@ with c3:
 # with col5:
 #     st.metric(label='Axis5', value=angle5)
 
-output_file_name = st.text_input("Output file name .csv", "positions_kpr")
+output_file_name = st.text_input("Output file name .csv", "kpr_positions")
 if st.button("Save Positions"):
     save_positions_to_csv(st.session_state['saved_positions'], f"{output_file_name}.csv")
+
+# create a button that looops over saved positions and excutes each of them every 0.5 seconds
+if st.button("Execute Saved Positions"):
+    for pos in st.session_state['saved_positions']:
+        update_motor_positions(pos)
+    st.success("All saved positions executed successfully")
