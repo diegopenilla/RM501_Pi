@@ -227,10 +227,10 @@ def update_motor_positions(positions):
     update_wrist_positions(positions[3], positions[4])
 
     if positions[5] and not st.session_state['gripper_closed']:
-        gripper_close(0.05)
+        gripper_close(0.1)
 
     elif not positions[5] and st.session_state['gripper_closed']:
-        gripper_open(0.05)
+        gripper_open(0.1)
 
     # sleep while encoders are changing, all addresses
     time.sleep(2)
