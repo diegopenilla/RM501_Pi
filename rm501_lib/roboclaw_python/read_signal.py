@@ -11,8 +11,8 @@ try:
             line = ser.readline().decode('utf-8').rstrip()
             print(f"Received message: {line}")
 
-            # Call the main function of pick_paper
-            pick_paper.main()  # replace with the actual function name if it's not 'execute_saved_positions'
+            robot_arm = pick_paper.RobotArm("/dev/RM501", 115200)
+            robot_arm.initialize_and_execute("kpr_positions.csv")
 
             time.sleep(10)
 except KeyboardInterrupt:
