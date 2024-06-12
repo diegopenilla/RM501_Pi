@@ -21,7 +21,7 @@ rc = Roboclaw("/dev/RM501", 115200)
 rc.Open()
 
 
-def homeaxis_claw(address, speed, caltime, wrist_time=10):
+def homeaxis_claw(address, speed, caltime, wrist_time=400):
     rc.SpeedM2(address, 2000)
     time.sleep(2)
     rc.SpeedM2(address, 0)
@@ -38,9 +38,10 @@ def homeaxis_claw(address, speed, caltime, wrist_time=10):
     time.sleep(1)
     rc.SpeedM1(address3, -2000)
     rc.SpeedM2(address3, -2000)
+    time.sleep(0.01)
 
     for _ in range(caltime):
-        if rc.ReadEncM1(address3)[1] > 5:
+        if rc.ReadEncM1(address3)[1] > 50:
             time.sleep(3)
         else:
             break
@@ -66,7 +67,7 @@ def homeaxis_claw(address, speed, caltime, wrist_time=10):
     print("Calibrating wrist roll")
     m1_speed = 2000
 
-    if rc.ReadEncM2(address3)[1] <= 10:
+    if rc.ReadEncM2(address3)[1] <= 50:
         print("Wrist Roll Switch Already Hit, skipping...")
 
     else:
@@ -95,7 +96,7 @@ def homeaxis_claw(address, speed, caltime, wrist_time=10):
             rc.SpeedM1(address3, m1_speed)
             rc.SpeedM2(address3, -m1_speed)
 
-            for _ in range(int(wrist_time*1.5)):
+            for _ in range(int(wrist_time)):
                 if rc.ReadEncM2(address3)[1] <= 20:
                     time.sleep(0.01)
                     rc.SpeedM1(address3, 0)
@@ -113,7 +114,7 @@ def homeaxis_claw(address, speed, caltime, wrist_time=10):
     rc.SpeedM1(address3, m1_speed)
     time.sleep(0.01)
     rc.SpeedM2(address3, -m1_speed)
-    time.sleep(0.8)
+    time.sleep(1.3)
     rc.SpeedM1(address3, 0)
     time.sleep(0.01)
     rc.SpeedM2(address3,
@@ -128,7 +129,7 @@ def homeaxis_claw(address, speed, caltime, wrist_time=10):
     time.sleep(4) # time to reach center of range
 
     rc.SpeedM1(address3, 0)
-    time.sleep(0.01)
+    time.sleep(0.03)
     rc.SpeedM2(address3, 0)
 
     print("Set encoders to 0")
