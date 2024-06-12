@@ -12,17 +12,17 @@ rc = Roboclaw("/dev/ttyUSB0", 115200)
 
 
 # Close the gripper
-def gripper_close(rc, step=0.2):
-    rc.SpeedAccelM1(ADDRESS1, 3000, 3000)
-    time.sleep(step)
-    rc.SpeedAccelM1(ADDRESS1, 3000, 0)
-
-
-# Open the gripper
-def gripper_open(rc, step=0.2):
-    rc.SpeedAccelM1(ADDRESS1, 3000, -3000)
-    time.sleep(step)
-    rc.SpeedAccelM1(ADDRESS1, 3000, 0)
+# def gripper_close(rc, step=0.2):
+#     rc.SpeedAccelM1(ADDRESS1, 3000, 3000)
+#     time.sleep(step)
+#     rc.SpeedAccelM1(ADDRESS1, 3000, 0)
+#
+#
+# # Open the gripper
+# def gripper_open(rc, step=0.2):
+#     rc.SpeedAccelM1(ADDRESS1, 3000, -3000)
+#     time.sleep(step)
+#     rc.SpeedAccelM1(ADDRESS1, 3000, 0)
 
 
 # Update motor positions safely
@@ -84,12 +84,13 @@ if __name__ == "__main__":
     rc.SpeedAccelDeccelPositionM2(ADDRESS2, 2000, 10000, 10000, 14500, 100)
     time.sleep(0.05)
 
+
     # set encoders 3 to 0
     rc.SetEncM1(ADDRESS3, 0)
     rc.SetEncM2(ADDRESS3, 0)
 
     # close gripper
-    gripper_close(0.5)
+    # gripper_close(0.5)
 
     positions = load_positions_from_csv("positions_kpr.csv")
     execute_saved_positions(rc, positions)
