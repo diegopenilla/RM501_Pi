@@ -9,6 +9,7 @@ try:
     while True:
         if ser.in_waiting > 0:
             line = ser.readline().decode('utf-8').rstrip()
+            print("Received: ", line)
             if line == "coin":
                 robot_arm = pick_paper.RobotArm("/dev/RM501", 115200)
                 robot_arm.initialize_and_execute("kpr_positions.csv")
