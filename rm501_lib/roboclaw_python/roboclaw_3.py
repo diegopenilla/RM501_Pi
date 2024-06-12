@@ -12,7 +12,8 @@ class Roboclaw:
 		self.timeout = timeout
 		self._trystimeout = retries
 		self._crc = 0
-		self._port = serial.Serial(port=self.comport, baudrate=self.rate, timeout=1, interCharTimeout=self.timeout)
+		self.baudrate = rate
+		self._port = serial.Serial(comport, rate, timeout=timeout)
 
 	#Command Enums
 	class Cmd():
@@ -1076,7 +1077,7 @@ class Roboclaw:
 		
 	def Open(self):
 		try:
-			self._port = serial.Serial(port=self.comport, baudrate=self.rate, timeout=1, interCharTimeout=self.timeout)
+			self._port = serial.Serial(self.comport, baudrate=self.baudrate, timeout=self.timeout)
 		except:
 			return 0
 		return 1
