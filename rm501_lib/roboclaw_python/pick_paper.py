@@ -10,6 +10,7 @@ ADDRESS3 = 0x82
 
 rc = Roboclaw("/dev/RM501", 115200)
 
+gripper_closed = True
 
 # Update motor positions safely
 def safe_update_motor_position(rc, motor_id, position):
@@ -32,19 +33,24 @@ def update_wrist_positions(rc, pos4, pos5):
 
 
 def gripper_close(rc, step=0.1):
+    global gripper_closed
     rc.SpeedAccelM1(ADDRESS1, 3000, 3000)
     time.sleep(step)
     rc.SpeedAccelM1(ADDRESS1, 3000, 0)
+    gripper_closed = True
 #
 #
 # Open the gripper
 def gripper_open(rc, step=0.1):
+    global gripper_closed
     rc.SpeedAccelM1(ADDRESS1, 3000, -3000)
     time.sleep(step)
     rc.SpeedAccelM1(ADDRESS1, 3000, 0)
+    gripper_closed = False
 
 # Update all motor positions
-def update_motor_positions(rc, positions, gripper_closed):
+def update_motor_positions(rc, positions):
+    global gripper_closed
     safe_update_motor_position(rc, 1, positions[0])
     safe_update_motor_position(rc, 2, positions[1])
     safe_update_motor_position(rc, 3, positions[2])
@@ -58,7 +64,7 @@ def update_motor_positions(rc, positions, gripper_closed):
         gripper_closed = False
 
     # Sleep while encoders are changing
-    time.sleep(2)
+    time.sleep(3)
 
     return positions[0], positions[1], positions[2], positions[3], positions[4], gripper_closed
 
@@ -67,11 +73,10 @@ def update_motor_positions(rc, positions, gripper_closed):
 
 # Main execution function
 def execute_saved_positions(rc, positions):
-    gripper_closed = True
     for pos in positions[:-1]:
-        update_motor_positions(rc, pos, gripper_closed)
+        update_motor_positions(rc, pos)
 
-    update_motor_positions(rc, positions[-1], gripper_closed)
+    update_motor_positions(rc, positions[-1])
     time.sleep(3)
     print("All saved positions executed successfully")
 
@@ -90,7 +95,7 @@ if __name__ == "__main__":
     rc.SetEncM1(ADDRESS3, 0)
     rc.SetEncM2(ADDRESS3, 0)
 
-    # close gripper
+    # close grippers
     rc.SpeedAccelM1(ADDRESS1, 3000, 3000)
     time.sleep(0.5)
     rc.SpeedAccelM1(ADDRESS1, 3000, 0)
