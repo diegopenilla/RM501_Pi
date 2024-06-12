@@ -44,7 +44,7 @@ def gripper_open(step=0.2):
 
 
 if 'rc' not in st.session_state:
-    rc = Roboclaw("/dev/ttyUSB0", 115200)
+    rc = Roboclaw("/dev/RM501", 115200)
     st.session_state['rc'] = rc
     # CONTROL  ARM
     rc.Open()
@@ -116,11 +116,11 @@ def move_up_q4():
     current_4 = rc.ReadEncM1(address3)[1]
     current_5 = rc.ReadEncM2(address3)[1]
 
-    rc.SpeedAccelDeccelPositionM1(address3, 2000, 10000, 10000, current_4 + 500, 100)
+    rc.SpeedAccelDeccelPositionM1(address3, 3000, 10000, 10000, current_4 + 1000, 100)
     time.sleep(0.01)
-    rc.SpeedAccelDeccelPositionM2(address3, 2000, 10000, 10000, current_5 + 500, 100)
+    rc.SpeedAccelDeccelPositionM2(address3, 3000, 10000, 10000, current_5 + 1000, 100)
 
-    time.sleep(1)
+    time.sleep(2)
 
     # read encoder
     st.session_state['motor4_pos_current'] = rc.ReadEncM1(address3)[1]
@@ -131,11 +131,11 @@ def move_down_q4():
     current_4 = rc.ReadEncM1(address3)[1]
     current_5 = rc.ReadEncM2(address3)[1]
 
-    rc.SpeedAccelDeccelPositionM1(address3, 2000, 10000, 10000, current_4 - 500, 100)
+    rc.SpeedAccelDeccelPositionM1(address3, 3000, 10000, 10000, current_4 - 1000, 100)
     time.sleep(0.01)
-    rc.SpeedAccelDeccelPositionM2(address3, 2000, 10000, 10000, current_5 - 500, 100)
+    rc.SpeedAccelDeccelPositionM2(address3, 3000, 10000, 10000, current_5 - 1000, 100)
 
-    time.sleep(1)
+    time.sleep(2)
 
     # read encoder
     st.session_state['motor4_pos_current'] = rc.ReadEncM1(address3)[1]

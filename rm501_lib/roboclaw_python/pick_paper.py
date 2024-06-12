@@ -8,10 +8,7 @@ ADDRESS1 = 0x80
 ADDRESS2 = 0x81
 ADDRESS3 = 0x82
 
-rc = Roboclaw("/dev/ttyUSB0", 115200)
-
-
-
+rc = Roboclaw("/dev/RM501", 115200)
 
 
 # Update motor positions safely
@@ -34,14 +31,14 @@ def update_wrist_positions(rc, pos4, pos5):
     rc.SpeedAccelDeccelPositionM2(ADDRESS3, 2000, 10000, 10000, pos5, 100)
 
 
-def gripper_close(rc, step=0.2):
+def gripper_close(rc, step=0.1):
     rc.SpeedAccelM1(ADDRESS1, 3000, 3000)
     time.sleep(step)
     rc.SpeedAccelM1(ADDRESS1, 3000, 0)
 #
 #
 # Open the gripper
-def gripper_open(rc, step=0.2):
+def gripper_open(rc, step=0.1):
     rc.SpeedAccelM1(ADDRESS1, 3000, -3000)
     time.sleep(step)
     rc.SpeedAccelM1(ADDRESS1, 3000, 0)
