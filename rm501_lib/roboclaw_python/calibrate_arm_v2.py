@@ -17,7 +17,7 @@ address1 = 0x80
 address2 = 0x81
 address3 = 0x82
 # Set up the connection with the correct port and baud rate (Update port as necessary)
-rc = Roboclaw("/dev/tty.usbserial-DN41WBZS", 115200)
+rc = Roboclaw("/dev/ttyUSB0", 115200)
 rc.Open()
 
 

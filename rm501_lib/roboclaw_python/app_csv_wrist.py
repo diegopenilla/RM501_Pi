@@ -44,7 +44,7 @@ def gripper_open(step=0.2):
 
 
 if 'rc' not in st.session_state:
-    rc = Roboclaw("/dev/tty.usbserial-DN41WBZS", 115200)
+    rc = Roboclaw("/dev/ttyUSB0", 115200)
     st.session_state['rc'] = rc
     # CONTROL  ARM
     rc.Open()
