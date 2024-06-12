@@ -71,8 +71,11 @@ def update_motor_positions(rc, positions, gripper_closed):
 # Main execution function
 def execute_saved_positions(rc, positions):
     gripper_closed = True
-    for pos in positions:
+    for pos in positions[-1:]:
         update_motor_positions(rc, pos, gripper_closed)
+
+    update_motor_positions(rc, positions[-1], gripper_closed)
+    time.sleep(5)
     print("All saved positions executed successfully")
 
 
