@@ -8,8 +8,7 @@ ADDRESS1 = 0x80
 ADDRESS2 = 0x81
 ADDRESS3 = 0x82
 
-rc = Roboclaw("/dev/ttyACM0", 115200)
-
+rc = Roboclaw("/dev/ttyUSB0", 115200)
 
 
 # Close the gripper
@@ -77,7 +76,6 @@ def execute_saved_positions(rc, positions):
 
 
 if __name__ == "__main__":
-    rc = initialize_roboclaw()
     # send initial
     rc.SpeedAccelDeccelPositionM2(ADDRESS1, 2000, 10000, 10000, 24000, 100)
     time.sleep(0.05)
