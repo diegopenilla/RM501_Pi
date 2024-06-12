@@ -12,7 +12,6 @@ ADDRESS3 = 0x82
 # Initialize RoboClaw connection
 def initialize_roboclaw(port="/dev/ttyUSB0", baudrate=115200):
     rc = Roboclaw(port, baudrate)
-    rc.Open()
     return rc
 
 
