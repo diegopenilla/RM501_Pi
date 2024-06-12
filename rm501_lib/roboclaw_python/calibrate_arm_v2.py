@@ -125,7 +125,7 @@ def homeaxis_claw(address, speed, caltime, wrist_time=10):
     rc.SpeedM1(address3, 2000)
     time.sleep(0.03)
     rc.SpeedM2(address3, 2000)
-    time.sleep(3.85) # time to reach center of range
+    time.sleep(4) # time to reach center of range
 
     rc.SpeedM1(address3, 0)
     time.sleep(0.01)
