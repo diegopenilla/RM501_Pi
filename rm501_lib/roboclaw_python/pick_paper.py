@@ -8,11 +8,8 @@ ADDRESS1 = 0x80
 ADDRESS2 = 0x81
 ADDRESS3 = 0x82
 
+rc = Roboclaw("/dev/ttyACM0", 115200)
 
-# Initialize RoboClaw connection
-def initialize_roboclaw(port="/dev/ttyUSB0", baudrate=115200):
-    rc = Roboclaw(port, baudrate)
-    return rc
 
 
 # Close the gripper
