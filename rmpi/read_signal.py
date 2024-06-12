@@ -1,7 +1,7 @@
 import serial
 
 # Initialize serial connection
-ser = serial.Serial('/dev/ttyACM0', 9600)  # replace '/dev/ttyACM0' with your port
+ser = serial.Serial('/dev/CoinAcceptor', 9600)  # replace '/dev/ttyACM0' with your port
 
 try:
     while True:
