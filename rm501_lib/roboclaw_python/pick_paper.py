@@ -92,5 +92,5 @@ if __name__ == "__main__":
     # close gripper
     # gripper_close(0.5)
 
-    positions = load_positions_from_csv("positions_kpr.csv")
+    positions = load_positions_from_csv("kpr_positions.csv")
     execute_saved_positions(rc, positions)
