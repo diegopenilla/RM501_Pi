@@ -10,26 +10,9 @@ ADDRESS3 = 0x82
 
 
 # Initialize RoboClaw connection
-rc = None
 def initialize_roboclaw(port="/dev/ttyUSB0", baudrate=115200):
-    global rc
     rc = Roboclaw(port, baudrate)
     rc.Open()
-    # send initial
-    rc.SpeedAccelDeccelPositionM2(ADDRESS1, 2000, 10000, 10000, 24000, 100)
-    time.sleep(0.05)
-    rc.SpeedAccelDeccelPositionM1(ADDRESS2, 2000, 10000, 10000, 2500, 100)
-    time.sleep(0.05)
-    rc.SpeedAccelDeccelPositionM2(ADDRESS2, 2000, 10000, 10000, 14500, 100)
-    time.sleep(0.05)
-
-    # set encoders 3 to 0
-    rc.SetEncM1(ADDRESS3, 0)
-    rc.SetEncM2(ADDRESS3, 0)
-
-    # close gripper
-    gripper_close(0.5)
-
     return rc
 
 
@@ -99,5 +82,20 @@ def execute_saved_positions(rc, positions):
 
 if __name__ == "__main__":
     rc = initialize_roboclaw()
-    positions = load_positions_from_csv("positions.csv")
+    # send initial
+    rc.SpeedAccelDeccelPositionM2(ADDRESS1, 2000, 10000, 10000, 24000, 100)
+    time.sleep(0.05)
+    rc.SpeedAccelDeccelPositionM1(ADDRESS2, 2000, 10000, 10000, 2500, 100)
+    time.sleep(0.05)
+    rc.SpeedAccelDeccelPositionM2(ADDRESS2, 2000, 10000, 10000, 14500, 100)
+    time.sleep(0.05)
+
+    # set encoders 3 to 0
+    rc.SetEncM1(ADDRESS3, 0)
+    rc.SetEncM2(ADDRESS3, 0)
+
+    # close gripper
+    gripper_close(0.5)
+
+    positions = load_positions_from_csv("positions_kpr.csv")
     execute_saved_positions(rc, positions)
