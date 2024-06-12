@@ -1,6 +1,7 @@
 import time
 import csv
 from roboclaw_3 import Roboclaw
+from app_utils import load_positions_from_csv, save_positions_to_csv
 
 # Constants
 ADDRESS1 = 0x80
@@ -70,14 +71,6 @@ def update_motor_positions(rc, positions, gripper_closed):
 
 
 # Load positions from CSV
-def load_positions_from_csv(filename):
-    positions = []
-    with open(filename, mode='r') as file:
-        csv_reader = csv.reader(file)
-        for row in csv_reader:
-            positions.append([int(value) for value in row])
-    return positions
-
 
 # Main execution function
 def execute_saved_positions(rc, positions):
@@ -89,5 +82,5 @@ def execute_saved_positions(rc, positions):
 
 if __name__ == "__main__":
     rc = initialize_roboclaw()
-    positions = load_positions_from_csv("kpr_positions.csv")
+    positions = load_positions_from_csv("positions.csv")
     execute_saved_positions(rc, positions)
