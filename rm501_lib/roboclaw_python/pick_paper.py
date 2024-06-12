@@ -91,7 +91,9 @@ if __name__ == "__main__":
     rc.SetEncM2(ADDRESS3, 0)
 
     # close gripper
-    gripper_close(0.5)
+    rc.SpeedAccelM1(ADDRESS1, 3000, 3000)
+    time.sleep(0.5)
+    rc.SpeedAccelM1(ADDRESS1, 3000, 0)
 
     positions = load_positions_from_csv("kpr_positions.csv")
     execute_saved_positions(rc, positions)
