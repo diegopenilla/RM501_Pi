@@ -257,7 +257,7 @@ with col1:
         homeaxis_claw(address3, 2000, 400)
 
 with col2:
-    if st.button("Set Zero"):
+    if st.button("Set Claw Zero"):
         rc.SetEncM1(address3, 0)
         rc.SetEncM2(address3, 0)
 
@@ -268,7 +268,7 @@ with col2:
         rc.SpeedAccelDeccelPositionM2(address3, 2000, 10000, 10000, 0, 100)
 
 save_position_name = st.sidebar.text_input("Position Name", "")
-if st.button("Save Position"):
+if st.sidebar.button("Save Position"):
     pos = [st.session_state['motor1_slider_key'], st.session_state['motor2_slider_key'],
            st.session_state['motor3_slider_key'], st.session_state['motor4_pos_current'],
            st.session_state['motor5_pos_current'], st.session_state['gripper_closed'],
@@ -362,8 +362,11 @@ output_file_name = st.text_input("Output file name .csv", "kpr_positions")
 if st.button("Save Positions"):
     save_positions_to_csv(st.session_state['saved_positions'], f"{output_file_name}.csv")
 
+
 # create a button that looops over saved positions and excutes each of them every 0.5 seconds
 if st.button("Execute Saved Positions"):
     for pos in st.session_state['saved_positions']:
         update_motor_positions(pos)
     st.success("All saved positions executed successfully")
+
+st.warning("Only if calibrated, claw pointing upwards with red stripe facing front")
