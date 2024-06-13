@@ -231,7 +231,6 @@ def calibrate(rc = rc):
     homeaxis(address1, 2, 2000, 10)
     homeaxis(address2, 1, 2000, 5)
     homeaxis(address2, 2, 2000, 5)
-    homeaxis_claw(address3, 2000, 400)
 
     rc.SpeedAccelDeccelPositionM2(address1, 2000, 10000, 10000, 24000, 100)
     time.sleep(0.1)
