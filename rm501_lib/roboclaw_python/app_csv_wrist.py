@@ -28,6 +28,7 @@ address3 = 0x82
 if "gripper_closed" not in st.session_state:
     st.session_state["gripper_closed"] = True
 
+
 def gripper_close(step=0.2):
     rc.SpeedAccelM1(address1, 3000, 3000)
     time.sleep(step)
@@ -40,7 +41,6 @@ def gripper_open(step=0.2):
     time.sleep(step)
     rc.SpeedAccelM1(address1, 3000, 0)
     st.session_state["gripper_closed"] = 0
-
 
 
 if 'rc' not in st.session_state:
@@ -86,8 +86,6 @@ if 'motor4_pos_current' not in st.session_state:
     st.session_state['motor4_pos_current'] = 0
     st.session_state['motor5_pos_current'] = 0
 
-
-
 rc = st.session_state['rc']
 
 if 'current_pos' not in st.session_state:
@@ -108,7 +106,6 @@ if 'current_pos' not in st.session_state:
 
     if 'motor3_slider_key' not in st.session_state:
         st.session_state['motor3_slider_key'] = enc3
-
 
 
 # UTILS
@@ -251,16 +248,15 @@ if 'saved_positions' not in st.session_state:
 
 st.sidebar.title('RM501 Move Master II')
 
-save_position_name = st.sidebar.text_input("Position Name", "")
-col1, col2, col3 = st.sidebar.columns(3)
-with col2:
+col1, col2 = st.sidebar.columns(2)
+with col1:
     if st.button("Calibrate"):
         calibrate()
 
     if st.button("Calibrate Claw"):
         homeaxis_claw(address3, 2000, 400)
 
-with col3:
+with col2:
     if st.button("Set Zero"):
         rc.SetEncM1(address3, 0)
         rc.SetEncM2(address3, 0)
@@ -271,19 +267,18 @@ with col3:
         time.sleep(0.05)
         rc.SpeedAccelDeccelPositionM2(address3, 2000, 10000, 10000, 0, 100)
 
-with col1:
+save_position_name = st.sidebar.text_input("Position Name", "")
+if st.button("Save Position"):
+    pos = [st.session_state['motor1_slider_key'], st.session_state['motor2_slider_key'],
+           st.session_state['motor3_slider_key'], st.session_state['motor4_pos_current'],
+           st.session_state['motor5_pos_current'], st.session_state['gripper_closed'],
+           save_position_name]
 
-    if st.button("Save Position"):
-        pos = [st.session_state['motor1_slider_key'], st.session_state['motor2_slider_key'],
-               st.session_state['motor3_slider_key'], st.session_state['motor4_pos_current'],
-               st.session_state['motor5_pos_current'], st.session_state['gripper_closed'],
-               save_position_name]
+    st.session_state['motor1_pos_current'] = st.session_state['motor1_slider_key']
+    st.session_state['motor2_pos_current'] = st.session_state['motor2_slider_key']
+    st.session_state['motor3_pos_current'] = st.session_state['motor3_slider_key']
 
-        st.session_state['motor1_pos_current'] = st.session_state['motor1_slider_key']
-        st.session_state['motor2_pos_current'] = st.session_state['motor2_slider_key']
-        st.session_state['motor3_pos_current'] = st.session_state['motor3_slider_key']
-
-        st.session_state['saved_positions'].append(pos)
+    st.session_state['saved_positions'].append(pos)
 
 st.sidebar.subheader('Differential Drive')
 with st.sidebar.container():
