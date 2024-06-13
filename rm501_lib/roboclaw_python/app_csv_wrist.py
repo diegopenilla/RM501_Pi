@@ -253,14 +253,14 @@ st.sidebar.title('RM501 Move Master II')
 
 save_position_name = st.sidebar.text_input("Position Name", "")
 col1, col2, col3 = st.sidebar.columns(3)
-with col1:
+with col2:
     if st.button("Calibrate"):
         calibrate()
 
     if st.button("Calibrate Claw"):
         homeaxis_claw(address3, 2000, 400)
 
-with col2:
+with col3:
     if st.button("Set Zero"):
         rc.SetEncM1(address3, 0)
         rc.SetEncM2(address3, 0)
@@ -271,7 +271,7 @@ with col2:
         time.sleep(0.05)
         rc.SpeedAccelDeccelPositionM2(address3, 2000, 10000, 10000, 0, 100)
 
-with col3:
+with col1:
 
     if st.button("Save Position"):
         pos = [st.session_state['motor1_slider_key'], st.session_state['motor2_slider_key'],
