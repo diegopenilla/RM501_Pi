@@ -10,6 +10,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/rm501_lib/roboclaw_python/kpr_positions2.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/rm501_lib/roboclaw_python/old_working.csv">
           <value>
             <Attribute>

@@ -17,7 +17,7 @@
 #include <Adafruit_NeoPixel.h>
 
 int maxStickers = 20;
-int stickerCoreoDuration = 3000;
+int stickerCoreoDuration = 25000;
 
 // Button and LED configuration
 const int coinPin = 2; // pin to read signal from coin acceptor
@@ -174,7 +174,7 @@ void setAllGreen() {
     strip3.setPixelColor(i, strip3.Color(255, 0, 30, 0)); // Green
     strip4.setPixelColor(i, strip4.Color(255, 0, 30, 0)); // Green
 
-    if (i > NUM_LEDS2 / 2) {
+    if (i > NUM_LEDS2 / 2.6) {
       strip2.setPixelColor(i, strip2.Color(255, 0, 30, 0)); // Green for first half
     } else {
       strip2.setPixelColor(i, strip2.Color(0, 0, 0, 0)); // Off for second half
@@ -208,7 +208,7 @@ void setAllRed() {
     strip3.setPixelColor(i, strip3.Color(0, 255, 0, 0)); // Red
     strip4.setPixelColor(i, strip4.Color(0, 255, 0, 0)); // Red
 
-    if (i > NUM_LEDS2 / 2) {
+    if (i > NUM_LEDS2 / 2.6) {
       strip2.setPixelColor(i, strip2.Color(0, 0, 0, 0)); // Off for first half
     } else {
       strip2.setPixelColor(i, strip2.Color(0, 255, 0, 0)); // Red for second half
@@ -224,9 +224,13 @@ void setAllRed() {
 void setAllBlue() {
   for (int i = 0; i < NUM_LEDS; i++) {
     strip1.setPixelColor(i, strip1.Color(0, 0, 255));
-    strip2.setPixelColor(i, strip2.Color(0, 0, 0));
     strip3.setPixelColor(i, strip3.Color(0, 0, 255));
     strip4.setPixelColor(i, strip4.Color(0, 0, 255));
+    if (i < NUM_LEDS2 / 2) {
+      strip2.setPixelColor(i, strip2.Color(0, 0, 255, 0)); // Off for first half
+    } else {
+      strip2.setPixelColor(i, strip2.Color(0, 0, 0, 0)); // Red for second half
+    }
   }
   strip1.show();
   strip2.show();

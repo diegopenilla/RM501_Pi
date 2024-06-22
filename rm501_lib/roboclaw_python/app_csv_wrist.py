@@ -1,14 +1,9 @@
 """
+Requires RM501 roboclaw to be connected to the PI
 
-About
-+ Up And Down
-+ Wrist Rotation
-Needs to be kept in state -> set by speed not by position.\
-IF kept in state, positions for them could be saved...
-
-- Can be defined the speed and time to achieve 90 degrees up and down...
-
-
+Launches UI to control the RM501 arm using sliders and buttons
+- SAVE WAYPOINTS
+- SAVE AND LOAD WAYPOINT SEQUENCES FROM CSV
 """
 
 import streamlit as st
