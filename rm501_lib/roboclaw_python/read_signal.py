@@ -21,13 +21,12 @@ import subprocess
 import pick_paper
 
 # Initialize serial connection
-ser = serial.Serial('/dev/tty.usbserial-2120', 9600)  # replace '/dev/tty.usbserial-2120' with your port
-#  '/dev/CoinAcceptor'
+ser = serial.Serial('/dev/CoinAcceptor', 9600)  # replace '/dev/tty.usbserial-2120' with your port
 streamlit_process = None
 
 # TODO:
 # 1. Determine duration of coreography to pick sticker define duration in seconds
-duration = 10.0
+duration = 20
 
 def terminate_app():
     global streamlit_process
