@@ -13,11 +13,3 @@ Useful Links:
 
 - To run mini-app (in robot_Lib/roboclaw_python_library_roboclaw/roboclaw_python/) folder run `streamlit run app.py`. Launches UI to control motor positions, wrist positions and gripper. 
 
-
-echo "# RM501_Pi" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git branch -M main
-git remote add origin git@github.com:diegopenilla/RM501_Pi.git
-git push -u origin main
