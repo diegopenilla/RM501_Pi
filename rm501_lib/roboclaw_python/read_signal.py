@@ -14,7 +14,6 @@ When signal app1 is received -> Button 2 Press
 When signal app0 or Ready Mode is received -> Button 2 Press
 - this should trigger the streamlit app to stop
 """
-
 import serial
 import time
 import subprocess
@@ -49,6 +48,7 @@ try:
                     streamlit_process = None
             elif line == "coin":
                 print("COIN!!")
+                print("COOIIN")
                 try:
                     robot_arm = pick_paper.RobotArm("/dev/RM501", 115200)
                     robot_arm.initialize_and_execute("kpr_positions.csv")
