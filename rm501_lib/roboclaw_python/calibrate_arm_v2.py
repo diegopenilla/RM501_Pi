@@ -1,15 +1,3 @@
-"""
-Mechanical Origin Script
-- Issue: requires switch 5 for the wrist roll to not be pressed when switch 4 is pressed 
-
-UNTANGLE CABLE
-
-    rc.SpeedM1(address3, -2000)
-    rc.SpeedM2(address3, 2000)
-    time.sleep(30)
-    rc.SpeedM1(address3, 0)
-    rc.SpeedM2(address3, 0)
-"""
 import time
 from roboclaw_3 import Roboclaw
 
@@ -246,7 +234,18 @@ def calibrate(rc = rc):
 
 if __name__ == "__main__":
     # calibrate()
-
     homeaxis_claw(address3, 2000, 400)
 
 
+"""
+Mechanical Origin Script
+- Issue: requires switch 5 for the wrist roll to not be pressed when switch 4 is pressed 
+
+UNTANGLE CABLE
+
+    rc.SpeedM1(address3, -2000)
+    rc.SpeedM2(address3, 2000)
+    time.sleep(30)
+    rc.SpeedM1(address3, 0)
+    rc.SpeedM2(address3, 0)
+"""
